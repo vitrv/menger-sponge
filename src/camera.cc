@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <stdio.h>
 
 namespace {
 	float pan_speed = 0.1f;
@@ -7,22 +8,24 @@ namespace {
 	float zoom_speed = 0.1f;
 	float horizon = 3.14f;
 	float vertical = 0.0f;
+	float camera_pos = 3.0;
 };
 
 // FIXME: Calculate the view matrix
 glm::mat4 Camera::get_view_matrix() const
 {
-    //double x, y;
-    //glfwGetCursorPos(window, &x, &y);
-    //glfwSetCursorPos(window, window_width/2, window_height /2);
 
-    horizon += (rotation_speed * float(window_width /2 - x - prev_x))/ 60;
-    vertical+= (rotation_speed * float(window_height/2 - y - prev_y))/ 60;
+    horizon  += (rotation_speed * (x - prev_x))/ 60;
+    vertical += (rotation_speed * (y - prev_y))/ 60;
+
 
     glm::vec3 position(  //Postion of camera
     cos(vertical) * sin(horizon),
     sin(vertical),
     cos(vertical) * cos(horizon));
+
+    camera_pos += (zoom - prev_zoom) * zoom_speed;
+    position = camera_pos * position; 
 
     glm::vec3 target(0,0,0); //Positon of cube
 

@@ -148,18 +148,22 @@ KeyCallback(GLFWwindow* window,
 int g_current_button;
 bool g_mouse_pressed;
 double x = 0, y = 0, prev_x = 0, prev_y = 0;
+double zoom = 0, prev_zoom = 0;
 
 
 void
 MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 {
-	if (!g_mouse_pressed)
+	if (!g_mouse_pressed){
+		//prev_x = mouse_x; prev_y = mouse_y; 
 		return;
+	}
 	if (g_current_button == GLFW_MOUSE_BUTTON_LEFT) {
-		prev_x = x; prev_y = y;
+		prev_x = x; prev_y = y;	
 		x = mouse_x; y = mouse_y;
 	} else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT) {
-		// FIXME: middle drag
+		prev_zoom = zoom;
+		zoom = mouse_x;
 	} else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE) {
 		// FIXME: right drag
 	}
@@ -357,7 +361,7 @@ int main(int argc, char* argv[])
 		// FIXME: change eye and center through mouse/keyboard events.
 		//int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
         //if (state == GLFW_PRESS)
-        if (g_mouse_pressed)	
+        //if (g_mouse_pressed)	
 		view_matrix = g_camera.get_view_matrix();
 
 		// Send vertices to the GPU.

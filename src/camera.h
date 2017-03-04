@@ -10,6 +10,7 @@ extern int window_width;
 extern int window_height;
 extern GLFWwindow* window;
 extern double x, y, prev_x, prev_y;
+extern double zoom, prev_zoom;
 
 class Camera {
 public:
