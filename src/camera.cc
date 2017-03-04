@@ -4,7 +4,7 @@
 namespace {
 	float pan_speed = 0.1f;
 	float roll_speed = 0.1f;
-	float rotation_speed = 0.05f;
+	float rotation_speed = 0.01f;
 	float zoom_speed = 0.1f;
 	float horizon = 3.14f;
 	float vertical = 0.0f;
@@ -15,8 +15,8 @@ namespace {
 glm::mat4 Camera::get_view_matrix() const
 {
 
-    horizon  += (rotation_speed * (x - prev_x))/ 60;
-    vertical += (rotation_speed * (y - prev_y))/ 60;
+    horizon  += (rotation_speed * (x - prev_x));
+    vertical += (rotation_speed * (y - prev_y));
 
 
     glm::vec3 position(  //Postion of camera
@@ -25,7 +25,12 @@ glm::mat4 Camera::get_view_matrix() const
     cos(vertical) * cos(horizon));
 
     camera_pos += (zoom - prev_zoom) * zoom_speed;
-    position = camera_pos * position; 
+    if (camera_pos < 1.0) camera_pos = 1.0;
+    position = camera_pos * position;
+
+    prev_x = x; prev_y = y;
+	prev_zoom = zoom;
+ 
 
     glm::vec3 target(0,0,0); //Positon of cube
 

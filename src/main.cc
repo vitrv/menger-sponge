@@ -154,8 +154,13 @@ double zoom = 0, prev_zoom = 0;
 void
 MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 {
+
 	if (!g_mouse_pressed){
-		//prev_x = mouse_x; prev_y = mouse_y; 
+		prev_x = mouse_x; prev_y = mouse_y;
+		x = mouse_x; y = mouse_y;
+		prev_zoom = mouse_x;
+		zoom = mouse_x;
+
 		return;
 	}
 	if (g_current_button == GLFW_MOUSE_BUTTON_LEFT) {
