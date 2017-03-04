@@ -2,6 +2,14 @@
 #define CAMERA_H
 
 #include <glm/glm.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+//#include "main.cc"
+
+extern int window_width;
+extern int window_height;
+extern GLFWwindow* window;
+extern double x, y, prev_x, prev_y;
 
 class Camera {
 public:

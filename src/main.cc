@@ -16,6 +16,8 @@
 #include "camera.h"
 
 int window_width = 800, window_height = 600;
+GLFWwindow* window;
+glm::mat4 view_matrix = glm::mat4();
 
 // VBO and VAO descriptors.
 enum { kVertexBuffer, kNormalBuffer, kIndexBuffer, kNumVbos };
@@ -145,6 +147,8 @@ KeyCallback(GLFWwindow* window,
 
 int g_current_button;
 bool g_mouse_pressed;
+double x = 0, y = 0, prev_x = 0, prev_y = 0;
+
 
 void
 MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
@@ -152,7 +156,8 @@ MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 	if (!g_mouse_pressed)
 		return;
 	if (g_current_button == GLFW_MOUSE_BUTTON_LEFT) {
-		// FIXME: left drag
+		prev_x = x; prev_y = y;
+		x = mouse_x; y = mouse_y;
 	} else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT) {
 		// FIXME: middle drag
 	} else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE) {
@@ -180,7 +185,7 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	GLFWwindow* window = glfwCreateWindow(window_width, window_height,
+	window = glfwCreateWindow(window_width, window_height,
 			&window_title[0], nullptr, nullptr);
 	CHECK_SUCCESS(window != nullptr);
 	glfwMakeContextCurrent(window);
@@ -350,7 +355,10 @@ int main(int argc, char* argv[])
 
 		// Compute the view matrix
 		// FIXME: change eye and center through mouse/keyboard events.
-		glm::mat4 view_matrix = g_camera.get_view_matrix();
+		//int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+        //if (state == GLFW_PRESS)
+        if (g_mouse_pressed)	
+		view_matrix = g_camera.get_view_matrix();
 
 		// Send vertices to the GPU.
 		CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER,
