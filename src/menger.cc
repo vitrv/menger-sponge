@@ -39,12 +39,106 @@ Menger::generate_geometry(std::vector<glm::vec4>& obj_vertices,
 			  std::vector<glm::vec4>& vtx_normals,
                           std::vector<glm::uvec3>& obj_faces) const
 {
+		// Front
 	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f));
 	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
 	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, -0.5f, 1.0f));
 	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
-	obj_vertices.push_back(glm::vec4(0.0f, 0.5f, -0.5f, 1.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, -0.5f, 1.0f));
 	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
 	obj_faces.push_back(glm::uvec3(0, 1, 2));
+
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(3, 4, 5));
+
+	//Left
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(6, 7, 8));
+
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(9, 10, 11));
+
+	//Top
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(12, 13, 14));
+
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(15, 16, 17));
+
+	//Right 
+	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(18, 19, 20));
+
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(21, 22, 23));
+
+	//Bottom
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(24, 25, 26));
+
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, -0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(27, 28, 29));
+
+	// Back
+	obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(30, 31, 32));
+
+	obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_vertices.push_back(glm::vec4(0.5f, -0.5f, 0.5f, 1.0f));
+	vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
+	obj_faces.push_back(glm::uvec3(33, 34, 35));
 }
 
