@@ -8,9 +8,10 @@ namespace {
 	float zoom_speed = 0.1f;
 	float horizon = 3.14f;
 	float vertical = 0.0f;
-	float camera_dist = 3.0; //distance
-    glm::vec3 target(0,0,0);
+	float camera_dist = 3.0; //eye
+    glm::vec3 target(0.0f, 0.0f, 0.0f);
     glm::vec2 pan(0.0f, 0.0f);
+    glm::vec3 up(0.0f, 1.0, 0.0f); //up
 };
 
 // FIXME: Calculate the view matrix
@@ -42,6 +43,13 @@ glm::mat4 Camera::get_view_matrix() const
     prev_x_pan = x_pan; prev_y_pan = y_pan;
  
 
+ 
+    return look_at(position, target, up);
+
+}
+
+glm::mat4 Camera::look_at(glm::vec3 position, glm::vec3 target, glm::vec3 up) const
+{
     // LookAt implementation
     glm::mat4 translation;
     translation[3][0] = -position.x;
@@ -49,7 +57,7 @@ glm::mat4 Camera::get_view_matrix() const
     translation[3][2] = -position.z;
     glm::mat4 rotation;
     glm::vec3 zaxis = glm::normalize(position - target);
-    glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(up_), zaxis));
+    glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(up), zaxis));
     glm::vec3 yaxis = glm::cross(zaxis, xaxis);
     rotation[0][0] = xaxis.x; // First column, first row
     rotation[1][0] = xaxis.y;
@@ -61,7 +69,5 @@ glm::mat4 Camera::get_view_matrix() const
     rotation[1][2] = zaxis.y;
     rotation[2][2] = zaxis.z; 
 
-    glm::mat4 view = rotation * translation;
-    return view;
-
+    return rotation * translation;
 }

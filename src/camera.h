@@ -16,6 +16,7 @@ extern double zoom, prev_zoom;
 class Camera {
 public:
 	glm::mat4 get_view_matrix() const;
+	glm::mat4 look_at(glm::vec3 position, glm::vec3 target, glm::vec3 up) const;
 	// FIXME: add functions to manipulate camera objects.
 private:
 	float camera_distance_ = 3.0;
