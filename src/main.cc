@@ -121,15 +121,20 @@ KeyCallback(GLFWwindow* window,
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
-		// FIXME: WASD
+		prev_zoom = zoom; zoom -= 1; 
 	} else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
+		prev_zoom = zoom; zoom += 1; 
 	} else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
+		prev_x_pan = x_pan; x_pan += 1;
 	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
+		prev_x_pan = x_pan; x_pan -= 1;
 	} else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
 		// FIXME: Left Right Up and Down
 	} else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
 	} else if (key == GLFW_KEY_DOWN && action != GLFW_RELEASE) {
+		prev_y_pan = y_pan; y_pan -= 1;
 	} else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
+		prev_y_pan = y_pan; y_pan += 1;
 	} else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
 		// FIXME: FPS mode on/off
 	}
@@ -149,6 +154,8 @@ int g_current_button;
 bool g_mouse_pressed;
 double x = 0, y = 0, prev_x = 0, prev_y = 0;
 double zoom = 0, prev_zoom = 0;
+double x_pan = 0, y_pan = 0;
+double prev_x_pan = 0, prev_y_pan = 0;
 
 
 void
@@ -160,6 +167,8 @@ MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 		x = mouse_x; y = mouse_y;
 		prev_zoom = mouse_x;
 		zoom = mouse_x;
+		prev_x_pan = mouse_x; prev_y_pan = mouse_y;
+		x_pan = mouse_x; y_pan = mouse_y;
 
 		return;
 	}
@@ -170,7 +179,8 @@ MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 		prev_zoom = zoom;
 		zoom = mouse_x;
 	} else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE) {
-		// FIXME: right drag
+		prev_x_pan = x_pan; prev_y_pan = y_pan;	
+		x_pan = mouse_x; y_pan = mouse_y;
 	}
 }
 

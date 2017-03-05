@@ -8,35 +8,41 @@ namespace {
 	float zoom_speed = 0.1f;
 	float horizon = 3.14f;
 	float vertical = 0.0f;
-	float camera_pos = 3.0;
+	float camera_dist = 3.0; //distance
+    glm::vec3 target(0,0,0);
+    glm::vec2 pan(0.0f, 0.0f);
 };
 
 // FIXME: Calculate the view matrix
 glm::mat4 Camera::get_view_matrix() const
 {
 
-    horizon  += (rotation_speed * (x - prev_x));
-    vertical += (rotation_speed * (y - prev_y));
+    horizon  += (rotation_speed * -(x - prev_x));
+    vertical += (rotation_speed * -(y - prev_y));
 
-
-    glm::vec3 position(  //Postion of camera
+    glm::vec3 position(  //Position of camera
     cos(vertical) * sin(horizon),
     sin(vertical),
     cos(vertical) * cos(horizon));
 
-    camera_pos += (zoom - prev_zoom) * zoom_speed;
-    if (camera_pos < 1.0) camera_pos = 1.0;
-    position = camera_pos * position;
+    camera_dist += (zoom - prev_zoom) * zoom_speed;
+    if (camera_dist < 1.0) camera_dist = 1.0;
+    position = camera_dist * position;
 
+    target.x += pan_speed * (x_pan - prev_x_pan);
+    target.y += pan_speed * (y_pan - prev_y_pan);
+    pan.x += pan_speed * (x_pan - prev_x_pan);
+    pan.y += pan_speed * (y_pan - prev_y_pan);
+    position.x += pan.x;
+    position.y += pan.y;
+
+    //Reset input info
     prev_x = x; prev_y = y;
 	prev_zoom = zoom;
+    prev_x_pan = x_pan; prev_y_pan = y_pan;
  
 
-    glm::vec3 target(0,0,0); //Positon of cube
-
-    //glm::vec3 right = glm::vec3(sin(horizon - 3.14f/2.0f),0, cos(horizon - 3.14f/2.0f));
-    //glm::vec3 up = glm::cross( right, target );
-
+    // LookAt implementation
     glm::mat4 translation;
     translation[3][0] = -position.x;
     translation[3][1] = -position.y;
