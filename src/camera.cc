@@ -9,15 +9,21 @@ namespace {
 	float horizon = 3.14f;
 	float vertical = 0.0f;
 	float camera_dist = 3.0; //eye
+	float roll = 0.0;
     glm::vec3 target(0.0f, 0.0f, 0.0f);
-    glm::vec2 pan(0.0f, 0.0f);
+    glm::vec3 pan(0.0f, 0.0f, 0.0f);
     glm::vec3 up(0.0f, 1.0, 0.0f); //up
 };
 
 // FIXME: Calculate the view matrix
 glm::mat4 Camera::get_view_matrix() const
 {
+    return get_orbital();
+}
 
+glm::mat4 Camera::get_orbital() const {
+
+    //Set rotation
     horizon  += (rotation_speed * -(x - prev_x));
     vertical += (rotation_speed * -(y - prev_y));
 
@@ -26,27 +32,36 @@ glm::mat4 Camera::get_view_matrix() const
     sin(vertical),
     cos(vertical) * cos(horizon));
 
+    //Set zoom
     camera_dist += (zoom - prev_zoom) * zoom_speed;
     if (camera_dist < 1.0) camera_dist = 1.0;
     position = camera_dist * position;
 
-    target.x += pan_speed * (x_pan - prev_x_pan);
-    target.y += pan_speed * (y_pan - prev_y_pan);
+    //Set pan
+    glm::vec3 zaxis = glm::normalize(position);
+    glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(up), zaxis));
+    glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+
     pan.x += pan_speed * (x_pan - prev_x_pan);
     pan.y += pan_speed * (y_pan - prev_y_pan);
+    target = pan.x * xaxis + pan.y * yaxis;
+    position += pan.x * xaxis + pan.y * yaxis; 
+    /*target.x = pan.x;
+    target.y = pan.y;
     position.x += pan.x;
-    position.y += pan.y;
+    position.y += pan.y;*/
 
     //Reset input info
     prev_x = x; prev_y = y;
-	prev_zoom = zoom;
+    prev_zoom = zoom;
     prev_x_pan = x_pan; prev_y_pan = y_pan;
  
 
  
     return look_at(position, target, up);
-
 }
+
+glm::mat4 Camera::get_fps() const {}
 
 glm::mat4 Camera::look_at(glm::vec3 position, glm::vec3 target, glm::vec3 up) const
 {
