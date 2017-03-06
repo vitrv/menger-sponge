@@ -14,12 +14,15 @@ namespace {
     glm::vec3 target(0.0f, 0.0f, 0.0f);
     glm::vec3 pan(0.0f, 0.0f, 0.0f);
     glm::vec3 up(0.0f, 1.0, 0.0f); //up
+    glm::vec3 position(0.0f, 0.0f, 0.3f);
 };
 
 // FIXME: Calculate the view matrix
 glm::mat4 Camera::get_view_matrix() const
 {
-    return get_orbital();
+    if(orbital)
+        return get_orbital();
+    else return get_fps();
 }
 
 glm::mat4 Camera::get_orbital() const {
@@ -28,10 +31,12 @@ glm::mat4 Camera::get_orbital() const {
     horizon  += (rotation_speed * -(x - prev_x));
     vertical += (rotation_speed * -(y - prev_y));
 
-    glm::vec3 position(  //Position of camera
+    glm::vec3 position_(  //Position of camera
     cos(vertical) * sin(horizon),
     sin(vertical),
     cos(vertical) * cos(horizon));
+
+    position = position_;
 
     //Set zoom
     camera_dist += (zoom - prev_zoom) * zoom_speed;
@@ -66,9 +71,26 @@ glm::mat4 Camera::get_orbital() const {
 }
 
 glm::mat4 Camera::get_fps() const {
+    //Set rotation
+    horizon  += (rotation_speed * -(x - prev_x));
+    vertical += (rotation_speed * -(y - prev_y));
 
 
-    // Add fps stuff
+    glm::vec3 direction( //Look direction
+    cos(vertical) * sin(horizon),
+    sin(vertical),
+    cos(vertical) * cos(horizon));
+
+    glm::vec3 xaxis = glm::vec3(sin(horizon - 3.14f/2.0f), 0, cos(horizon - 3.14f/2.0f));
+    glm::vec3 yaxis = glm::cross(xaxis, position - direction );
+
+
+    //Reset input info
+    prev_x = x; prev_y = y;
+    prev_zoom = zoom;
+    prev_x_pan = x_pan; prev_y_pan = y_pan;
+
+    return look_at(position, position - direction , yaxis);
 }
 
 glm::mat4 Camera::look_at(glm::vec3 position, glm::vec3 target, glm::vec3 up) const

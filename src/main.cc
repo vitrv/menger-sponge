@@ -137,7 +137,8 @@ KeyCallback(GLFWwindow* window,
 	} else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
 		prev_y_pan = y_pan; y_pan += 1;
 	} else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
-		// FIXME: FPS mode on/off
+		if (orbital == true) orbital = false;
+		else orbital = true;
 	}
 	if (!g_menger)
 		return ; // 0-4 only available in Menger mode.
@@ -158,6 +159,7 @@ double zoom = 0, prev_zoom = 0;
 double x_pan = 0, y_pan = 0;
 double prev_x_pan = 0, prev_y_pan = 0;
 double roll = 0;
+bool orbital = true;
 
 
 void
