@@ -129,8 +129,9 @@ KeyCallback(GLFWwindow* window,
 	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
 		prev_x_pan = x_pan; x_pan -= 1;
 	} else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
-		// FIXME: Left Right Up and Down
+		roll += 1;
 	} else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
+		roll -= 1;
 	} else if (key == GLFW_KEY_DOWN && action != GLFW_RELEASE) {
 		prev_y_pan = y_pan; y_pan -= 1;
 	} else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
@@ -156,6 +157,7 @@ double x = 0, y = 0, prev_x = 0, prev_y = 0;
 double zoom = 0, prev_zoom = 0;
 double x_pan = 0, y_pan = 0;
 double prev_x_pan = 0, prev_y_pan = 0;
+double roll = 0;
 
 
 void

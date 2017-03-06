@@ -1,5 +1,6 @@
 #include "camera.h"
 #include <stdio.h>
+#include <glm/gtx/rotate_vector.hpp>
 
 namespace {
 	float pan_speed = 0.1f;
@@ -9,7 +10,7 @@ namespace {
 	float horizon = 3.14f;
 	float vertical = 0.0f;
 	float camera_dist = 3.0; //eye
-	float roll = 0.0;
+	//float roll = 0.0;
     glm::vec3 target(0.0f, 0.0f, 0.0f);
     glm::vec3 pan(0.0f, 0.0f, 0.0f);
     glm::vec3 up(0.0f, 1.0, 0.0f); //up
@@ -37,6 +38,9 @@ glm::mat4 Camera::get_orbital() const {
     if (camera_dist < 1.0) camera_dist = 1.0;
     position = camera_dist * position;
 
+    //Set roll 
+    up = glm::rotate(up_, float(roll * roll_speed), position - target);
+
     //Set pan
     glm::vec3 zaxis = glm::normalize(position);
     glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(up), zaxis));
@@ -61,7 +65,11 @@ glm::mat4 Camera::get_orbital() const {
     return look_at(position, target, up);
 }
 
-glm::mat4 Camera::get_fps() const {}
+glm::mat4 Camera::get_fps() const {
+
+
+    // Add fps stuff
+}
 
 glm::mat4 Camera::look_at(glm::vec3 position, glm::vec3 target, glm::vec3 up) const
 {
