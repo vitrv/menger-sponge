@@ -155,7 +155,7 @@ KeyCallback(GLFWwindow* window,
 int g_current_button;
 bool g_mouse_pressed;
 double x = 0, y = 0, prev_x = 0, prev_y = 0;
-double zoom = 0, prev_zoom = 0;
+double zoom = 0.0, prev_zoom = 0.0;
 double x_pan = 0, y_pan = 0;
 double prev_x_pan = 0, prev_y_pan = 0;
 double roll = 0;
