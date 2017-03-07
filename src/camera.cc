@@ -28,20 +28,20 @@ glm::mat4 Camera::get_view_matrix() const
 glm::mat4 Camera::get_orbital() const {
 
     //Set rotation
-    horizon  += (rotation_speed * -(x - prev_x));
-    vertical += (rotation_speed * -(y - prev_y));
+    horizon  += (rotation_speed * (x - prev_x));
+    vertical += (rotation_speed * (y - prev_y));
 
     glm::vec3 position_(  //Position of camera
     cos(vertical) * sin(horizon),
     sin(vertical),
     cos(vertical) * cos(horizon));
 
-    position = position_;
+    position = -position_;
 
     //Set zoom
     camera_dist += (zoom - prev_zoom) * zoom_speed;
     if (camera_dist < 1.0) camera_dist = 1.0;
-    position = camera_dist * position;
+    position = glm::normalize(position) + camera_dist * glm::normalize(position);
 
     //Set roll 
     up = glm::rotate(up_, float(roll * roll_speed), position - target);
@@ -81,8 +81,17 @@ glm::mat4 Camera::get_fps() const {
     sin(vertical),
     cos(vertical) * cos(horizon));
 
+    //direction = -direction;
+
+    glm::vec3 zaxis = glm::normalize(direction);
     glm::vec3 xaxis = glm::vec3(sin(horizon - 3.14f/2.0f), 0, cos(horizon - 3.14f/2.0f));
-    glm::vec3 yaxis = glm::cross(xaxis, position - direction );
+    glm::vec3 yaxis = glm::cross(xaxis, direction);
+
+    //Zoom
+    position += float((zoom - prev_zoom) * zoom_speed) * direction;
+
+    // View will snap back to cube when going back to orbital
+    // With original view distance and target
 
 
     //Reset input info
@@ -90,7 +99,7 @@ glm::mat4 Camera::get_fps() const {
     prev_zoom = zoom;
     prev_x_pan = x_pan; prev_y_pan = y_pan;
 
-    return look_at(position, position - direction , yaxis);
+    return look_at(position, position + direction , yaxis);
 }
 
 glm::mat4 Camera::look_at(glm::vec3 position, glm::vec3 target, glm::vec3 up) const

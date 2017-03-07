@@ -125,9 +125,9 @@ KeyCallback(GLFWwindow* window,
 	} else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
 		prev_zoom = zoom; zoom += 1; 
 	} else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
-		prev_x_pan = x_pan; x_pan += 1;
-	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
 		prev_x_pan = x_pan; x_pan -= 1;
+	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
+		prev_x_pan = x_pan; x_pan += 1;
 	} else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
 		roll += 1;
 	} else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
