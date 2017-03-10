@@ -29,32 +29,34 @@ glm::mat4 Camera::get_orbital() const {
 
     //Set rotation
     horizon  += (rotation_speed * (x - prev_x));
-    vertical += (rotation_speed * (y - prev_y));
+    vertical += (rotation_speed * -(y - prev_y));
 
-    glm::vec3 position_(  //Position of camera
+    glm::vec3 position_(  //Position of camera in orbit
     cos(vertical) * sin(horizon),
     sin(vertical),
     cos(vertical) * cos(horizon));
 
-    position = -position_;
+    position = position_;
 
     //Set zoom
     camera_dist += (zoom - prev_zoom) * zoom_speed;
     if (camera_dist < 1.0) camera_dist = 1.0;
     position = camera_dist * glm::normalize(position);
 
-    //Set roll 
-    up = glm::rotate(up_, float(roll * roll_speed), position - target);
 
-    //Set pan
-    glm::vec3 zaxis = glm::normalize(position);
-    glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(up), zaxis));
-    glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+
+    glm::vec3 zaxis = glm::normalize(position - target);
+    glm::vec3 xaxis = 1.0f * glm::vec3(sin(horizon - 3.14f/2.0f), 0, cos(horizon - 3.14f/2.0f));
+    glm::vec3 yaxis = glm::cross(xaxis, zaxis);
+
+    //Set roll 
+    up = glm::rotate(yaxis, float(roll * roll_speed), zaxis);
+    glm::vec3 right = glm::rotate(xaxis, float(roll * roll_speed), zaxis);
 
     pan.x += pan_speed * (x_pan - prev_x_pan);
     pan.y += pan_speed * (y_pan - prev_y_pan);
-    target = pan.x * xaxis + pan.y * yaxis;
-    position += pan.x * xaxis + pan.y * yaxis;
+    target = pan.x * right + pan.y * up;
+    position += pan.x * right + pan.y * up;
     //position -= float((zoom - prev_zoom) * zoom_speed) * zaxis;
 
     //Reset input info
@@ -69,7 +71,7 @@ glm::mat4 Camera::get_orbital() const {
 
 glm::mat4 Camera::get_fps() const {
     //Set rotation
-    horizon  += (rotation_speed * -(x - prev_x));
+    horizon  += (rotation_speed * (x - prev_x));
     vertical += (rotation_speed * -(y - prev_y));
 
 
@@ -78,10 +80,10 @@ glm::mat4 Camera::get_fps() const {
     sin(vertical),
     cos(vertical) * cos(horizon));
 
-    //direction = -direction;
+    direction = -direction;
 
     glm::vec3 zaxis = glm::normalize(direction);
-    glm::vec3 xaxis = glm::vec3(sin(horizon - 3.14f/2.0f), 0, cos(horizon - 3.14f/2.0f));
+    glm::vec3 xaxis = -1.0f * glm::vec3(sin(horizon - 3.14f/2.0f), 0, cos(horizon - 3.14f/2.0f));
     glm::vec3 yaxis = glm::cross(xaxis, direction);
 
     //Roll
@@ -95,14 +97,10 @@ glm::mat4 Camera::get_fps() const {
     position += float(pan_speed * (y_pan - prev_y_pan)) * up;
 
     //Settings to transfer to orbital mode;
-    pan.x += pan_speed * (x_pan - prev_x_pan);
-    pan.y += pan_speed * (y_pan - prev_y_pan);
-    camera_dist += (zoom - prev_zoom) * zoom_speed;
-    target = position + (camera_dist * direction);
-    
-    
-    // View will snap back to cube when going back to orbital
-    // With original view distance and target
+    //pan.x += pan_speed * (x_pan - prev_x_pan);
+    //pan.y += pan_speed * (y_pan - prev_y_pan);
+    //camera_dist += (zoom - prev_zoom) * zoom_speed;
+    //target = position + (camera_dist * direction);
 
 
     //Reset input info
