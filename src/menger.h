@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <string>
 
 class Menger {
 public:
@@ -14,7 +15,11 @@ public:
 	void generate_geometry(std::vector<glm::vec4>& obj_vertices,
 			       std::vector<glm::vec4>& vtx_normals,
 	                       std::vector<glm::uvec3>& obj_faces) const;
-	void gHelper(std::vector<glm::vec4>& obj_vertices, double start, double unit, glm::vec3 startPoint) const;
+	void gHelper(std::vector<glm::vec4>& obj_vertices,std::vector<glm::vec4>& vtx_normals, double start, double unit, glm::vec3 startPoint) const;
+	void l1Helper(std::vector<glm::vec4>& obj_vertices, std::vector<glm::vec4>& vtx_normals,double start, double unit, glm::vec3 startPoint) const;
+	void l2Helper(std::vector<glm::vec4>& obj_vertices, std::vector<glm::vec4>& vtx_normals,double start, double unit, glm::vec3 startPoint) const;
+	void l3Helper(std::vector<glm::vec4>& obj_vertices, std::vector<glm::vec4>& vtx_normals,double start, double unit, glm::vec3 startPoint) const;
+	void l4Helper(std::vector<glm::vec4>& obj_vertices, std::vector<glm::vec4>& vtx_normals,double start, double unit, glm::vec3 startPoint) const;
 private:
 	int nesting_level_ = 0;
 	bool dirty_ = false;
