@@ -60,11 +60,9 @@ uniform vec4 light_position;
 out vec4 vs_light_direction;
 out vec4 v_norm;
 out vec4 m_norm;
-out vec4 world_position;
 void main()
 {
 	gl_Position = view * vertex_position;
-	world_position = gl_Position;
 	v_norm = view * vertex_normal;
 	m_norm = vertex_normal;
 	vs_light_direction = -(gl_Position) + view * light_position;
@@ -126,14 +124,18 @@ void main()
 // FIXME: Implement shader effects with an alternative shader.
 const char* floor_fragment_shader =
 R"zzz(#version 330 core
-//in vec4 normal;
+in vec4 normal;
 in vec4 light_direction;
-in vec4 world_position;
+in vec4 world_positions;
 out vec4 fragment_color;
 void main()
 {
-
-	fragment_color = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 world_position = gl_FragCoord;
+    int x =  int(world_position.x);
+    int z =  int(world_position.z);
+    if((x + z) % 2 == 0)
+		fragment_color = vec4(1.0, 1.0, 1.0, 1.0);
+	else fragment_color = vec4(0.0, 0.0, 0.0, 1.0);
 }
 )zzz";
 
@@ -276,10 +278,10 @@ int main(int argc, char* argv[])
 	std::vector<glm::uvec3> floor_faces;
 
 	//Make floor
-	floor_vertices.push_back(glm::vec4(-0.5f, -5.0f, -0.5f, 1.0f));
-	floor_vertices.push_back(glm::vec4(-0.5f, -5.0f, 0.5f,  1.0f));
-	floor_vertices.push_back(glm::vec4(0.5f,  -5.0f, -0.5f, 1.0f));
-	floor_vertices.push_back(glm::vec4(0.5f,  -5.0f,  0.5f, 1.0f));
+	floor_vertices.push_back(glm::vec4(-10.0f, -5.0f, -10.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(-10.0f, -5.0f, 10.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(10.0f,  -5.0f,  -10.0f,1.0f));
+	floor_vertices.push_back(glm::vec4(10.0f,  -5.0f,  10.0f, 1.0f));
 
 	floor_normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f,0.0f));
 	floor_normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f,0.0f));
@@ -438,6 +440,7 @@ int main(int argc, char* argv[])
 	GLuint floor_program_id = 0;
 	CHECK_GL_ERROR(floor_program_id = glCreateProgram());
 	CHECK_GL_ERROR(glAttachShader(floor_program_id, vertex_shader_id));
+	CHECK_GL_ERROR(glAttachShader(floor_program_id, geometry_shader_id));
 	CHECK_GL_ERROR(glAttachShader(floor_program_id, floor_fragment_shader_id));
 
 	CHECK_GL_ERROR(glBindAttribLocation(floor_program_id, 0, "vertex_position"));
