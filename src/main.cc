@@ -20,6 +20,8 @@ int window_width = 800, window_height = 600;
 GLFWwindow* window;
 glm::mat4 view_matrix = glm::mat4();
 
+int mode = 0;
+
 // VBO and VAO descriptors.
 enum { kVertexBuffer, kNormalBuffer, kIndexBuffer, kNumVbos };
 
@@ -52,6 +54,8 @@ void main()
 }
 )zzz";
 */
+
+
 const char* vertex_shader =
 R"zzz(#version 330 core
 in vec4 vertex_position;
@@ -108,21 +112,47 @@ flat in vec4 normal;
 flat in vec4 model_normal;
 in vec4 light_direction;
 out vec4 fragment_color;
+uniform int mode;
 void main()
-{
+{ 
+    vec4 purple = vec4(144.0/255.0, 100.0/255.0, 179.0/255.0, 1.0); 
+    vec4 b      = vec4(139.0/255.0, 215.0/255.0, 248.0/255.0, 1.0); 
+    vec4 pink   = vec4(206.0/255.0, 109.0/255.0, 168.0/255.0, 1.0); 
+
+    vec4 red = vec4(1.0, 0.0, 0.0, 1.0);
+    vec4 green = vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 blue = vec4(0.0, 0.0, 1.0, 1.0);
+
+
+
+
 	vec4 color = vec4(0.0, 0.5, 0.2, 1.0);
-	if (model_normal[0] == 1.0f)
-		color = vec4(1.0, 0.0, 0.0, 1.0);
-	if (model_normal[1] == 1.0f)
-		color = vec4(0.0, 1.0, 0.0, 1.0);
-	if (model_normal[2] == 1.0f)
-		color = vec4(0.0, 0.0, 1.0, 1.0);
-	if (model_normal[0] == -1.0f)
-		color = vec4(1.0, 0.0, 0.0, 1.0);
-	if (model_normal[1] == -1.0f)
-		color = vec4(0.0, 1.0, 0.0, 1.0);
-	if (model_normal[2] == -1.0f)
-		color = vec4(0.0, 0.0, 1.0, 1.0);
+	if (model_normal[0] == 1.0f){
+        if(mode == 0) color = red;
+		else color = pink;
+	}
+	if (model_normal[1] == 1.0f){
+        if(mode == 0) color = green;
+		else color = b;
+	}
+
+	if (model_normal[2] == 1.0f){
+		if(mode == 0) color = blue;
+		else color = purple;
+
+	}
+	if (model_normal[0] == -1.0f){
+        if(mode == 0) color = red;
+		else color = pink;
+	}
+	if (model_normal[1] == -1.0f){
+		if(mode == 0) color = green;
+		else color = b;
+	}
+	if (model_normal[2] == -1.0f){
+		if(mode == 0) color = blue;
+		else color = purple;
+	}
 	float dot_nl = dot(normalize(light_direction), normalize(normal));
 	dot_nl = clamp(dot_nl, 0.0, 1.0);
 	fragment_color = clamp(dot_nl * color, 0.0, 1.0);
@@ -136,16 +166,24 @@ flat in vec4 normal;
 in vec4 light_direction;
 in vec4 world_position;
 out vec4 fragment_color;
+uniform int mode;
 void main()
-{    
+{
+    vec4 pink1 = vec4(226.0/255.0, 153.0/255.0, 197.0/255.0, 1.0); 
+    vec4 pink2 = vec4(155.0/255.0, 40.0/255.0, 110.0/255.0, 1.0);
+    vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 black = vec4(0.0, 0.0, 0.0, 1.0);
 	vec4 color = vec4(0.0, 0.5, 0.2, 1.0);
 	int x =  int(floor(world_position.x));
     int z =  int(floor(world_position.z));
-    if((x + z) % 2 == 0)
-    	color = vec4(184.0/255.0, 140.0/255.0, 170.0/255.0, 1.0);
-		//color = vec4(1.0, 1.0, 1.0, 1.0);
-    else    color  = vec4(107.0/255.0, 68.0/255.0, 94.0/255.0, 1.0);
-	//else color = vec4(0.0, 0.0, 0.0, 1.0);
+    if((x + z) % 2 == 0){
+        if(mode == 0) color = white;
+		else color = pink1;
+	}	
+    else {
+       if(mode == 0) color = black;
+		else color = pink2;
+    }   
 
 	float dot_nl = dot(normalize(light_direction), normalize(normal));
 	dot_nl = clamp(dot_nl, 0.0, 1.0);
@@ -193,6 +231,9 @@ KeyCallback(GLFWwindow* window,
 	} else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
 		if (orbital == true) orbital = false;
 		else orbital = true;
+	} else if (key == GLFW_KEY_P && action != GLFW_RELEASE) {
+		if (mode == 1) mode = 0;
+		else mode = 1;
 	}
 	if (!g_menger)
 		return ; // 0-4 only available in Menger mode.
@@ -439,6 +480,9 @@ int main(int argc, char* argv[])
 	GLint light_position_location = 0;
 	CHECK_GL_ERROR(light_position_location =
 			glGetUniformLocation(program_id, "light_position"));
+		GLint mode_location = 0;
+	CHECK_GL_ERROR(mode_location = 
+			glGetUniformLocation(program_id, "mode"));
 
 	// Setup fragment shader for the floor
 	GLuint floor_fragment_shader_id = 0;
@@ -473,6 +517,9 @@ int main(int argc, char* argv[])
 	GLint floor_light_position_location = 0;
 	CHECK_GL_ERROR(floor_light_position_location =
 			glGetUniformLocation(floor_program_id, "light_position"));
+	GLint floor_mode_location = 0;
+	CHECK_GL_ERROR(floor_mode_location = 
+			glGetUniformLocation(floor_program_id, "mode"));
 
 	glm::vec4 light_position = glm::vec4(10.0f, 10.0f, 10.0f, 1.0f);
 	float aspect = 0.0f;
@@ -530,6 +577,7 @@ int main(int argc, char* argv[])
 		CHECK_GL_ERROR(glUniformMatrix4fv(view_matrix_location, 1, GL_FALSE,
 					&view_matrix[0][0]));
 		CHECK_GL_ERROR(glUniform4fv(light_position_location, 1, &light_position[0]));
+		CHECK_GL_ERROR(glUniform1i(floor_mode_location, mode));
 
 		// Draw our triangles.
 		CHECK_GL_ERROR(glDrawElements(GL_TRIANGLES, obj_faces.size() * 3, GL_UNSIGNED_INT, 0));
@@ -552,6 +600,7 @@ int main(int argc, char* argv[])
         CHECK_GL_ERROR(glUniformMatrix4fv(floor_view_matrix_location, 1, GL_FALSE,
 			&view_matrix[0][0]));
         CHECK_GL_ERROR(glUniform4fv(floor_light_position_location, 1, &light_position[0]));
+        CHECK_GL_ERROR(glUniform1i(floor_mode_location, mode));
 		// 	4. Call glDrawElements, since input geometry is
 		// 	indicated by VAO.
 		CHECK_GL_ERROR(glDrawElements(GL_TRIANGLES, floor_faces.size() * 3, GL_UNSIGNED_INT, 0));
