@@ -44,15 +44,10 @@ Menger::generate_geometry(std::vector<glm::vec4>& obj_vertices,
 	obj_faces.clear();
 	double unit=1.0f;
 	double start = -0.5f;
-	
-	// else{
-	// 	unit = (0.5)/(3*nesting_level_);
-	// }
-	//scaling, useless atm
+
 	double x = 1.0f;
 	int bigI = 0;
-	std::vector<glm::vec4> start_vertices;
-	glm::vec3 startPoint (0.0f,0.0f,0.0f);
+	glm::vec3 startPoint (0.0f,0.0f,unit);
 	if(nesting_level_ == 0){
 		bigI = 36;
 		// Front
@@ -251,6 +246,7 @@ Menger::l1Helper(std::vector<glm::vec4>& obj_vertices, std::vector<glm::vec4>& v
 	double len = unit/3;
 	double l1 = len;
 	double l2 = len*2;
+	startPoint.z-=len;
 
 	//Front Slice - 8
 	glm::vec3 startPoint1 (0.0f,0.0f,0.0f);
