@@ -292,10 +292,10 @@ int main(int argc, char* argv[])
 	std::vector<glm::uvec3> floor_faces;
 
 	//Make floor
-	floor_vertices.push_back(glm::vec4(-1000.0f, -5.0f, -1000.0f, 1.0f));
-	floor_vertices.push_back(glm::vec4(-1000.0f, -5.0f, 1000.0f, 1.0f));
-	floor_vertices.push_back(glm::vec4(1000.0f,  -5.0f,  -1000.0f,1.0f));
-	floor_vertices.push_back(glm::vec4(1000.0f,  -5.0f,  1000.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(-1000.0f, -2.0f, -1000.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(-1000.0f, -2.0f, 1000.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(1000.0f,  -2.0f,  -1000.0f,1.0f));
+	floor_vertices.push_back(glm::vec4(1000.0f,  -2.0f,  1000.0f, 1.0f));
 
 	floor_normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f,0.0f));
 	floor_normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f,0.0f));
