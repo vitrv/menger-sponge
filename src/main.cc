@@ -12,6 +12,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <debuggl.h>
+#include <math.h> 
 #include "menger.h"
 #include "camera.h"
 
@@ -60,9 +61,12 @@ uniform vec4 light_position;
 out vec4 vs_light_direction;
 out vec4 v_norm;
 out vec4 m_norm;
+out vec4 wp;
 void main()
 {
+
 	gl_Position = view * vertex_position;
+	wp = vertex_position;
 	v_norm = view * vertex_normal;
 	m_norm = vertex_normal;
 	vs_light_direction = -(gl_Position) + view * light_position;
@@ -77,14 +81,18 @@ uniform mat4 projection;
 in vec4 vs_light_direction[];
 in vec4 v_norm[];
 in vec4 m_norm[];
+in vec4 wp[];
 flat out vec4 normal;
 flat out vec4 model_normal;
 out vec4 light_direction;
+out vec4 world_position;
+
 void main()
 {
 	int n = 0;
 	for (n = 0; n < gl_in.length(); n++) {
 		normal = v_norm[n];
+		world_position = wp[n];
 		model_normal = m_norm[n];
 		light_direction = vs_light_direction[n];
 		gl_Position = projection * gl_in[n].gl_Position;
@@ -124,18 +132,24 @@ void main()
 // FIXME: Implement shader effects with an alternative shader.
 const char* floor_fragment_shader =
 R"zzz(#version 330 core
-in vec4 normal;
+flat in vec4 normal;
 in vec4 light_direction;
-in vec4 world_positions;
+in vec4 world_position;
 out vec4 fragment_color;
 void main()
-{
-    vec4 world_position = gl_FragCoord;
-    int x =  int(world_position.x);
-    int z =  int(world_position.z);
+{    
+	vec4 color = vec4(0.0, 0.5, 0.2, 1.0);
+	int x =  int(floor(world_position.x));
+    int z =  int(floor(world_position.z));
     if((x + z) % 2 == 0)
-		fragment_color = vec4(1.0, 1.0, 1.0, 1.0);
-	else fragment_color = vec4(0.0, 0.0, 0.0, 1.0);
+    	color = vec4(184.0/255.0, 140.0/255.0, 170.0/255.0, 1.0);
+		//color = vec4(1.0, 1.0, 1.0, 1.0);
+    else    color  = vec4(107.0/255.0, 68.0/255.0, 94.0/255.0, 1.0);
+	//else color = vec4(0.0, 0.0, 0.0, 1.0);
+
+	float dot_nl = dot(normalize(light_direction), normalize(normal));
+	dot_nl = clamp(dot_nl, 0.0, 1.0);
+	fragment_color = clamp(dot_nl * color, 0.0, 1.0);
 }
 )zzz";
 
@@ -278,10 +292,10 @@ int main(int argc, char* argv[])
 	std::vector<glm::uvec3> floor_faces;
 
 	//Make floor
-	floor_vertices.push_back(glm::vec4(-10.0f, -5.0f, -10.0f, 1.0f));
-	floor_vertices.push_back(glm::vec4(-10.0f, -5.0f, 10.0f, 1.0f));
-	floor_vertices.push_back(glm::vec4(10.0f,  -5.0f,  -10.0f,1.0f));
-	floor_vertices.push_back(glm::vec4(10.0f,  -5.0f,  10.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(-1000.0f, -5.0f, -1000.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(-1000.0f, -5.0f, 1000.0f, 1.0f));
+	floor_vertices.push_back(glm::vec4(1000.0f,  -5.0f,  -1000.0f,1.0f));
+	floor_vertices.push_back(glm::vec4(1000.0f,  -5.0f,  1000.0f, 1.0f));
 
 	floor_normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f,0.0f));
 	floor_normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f,0.0f));
